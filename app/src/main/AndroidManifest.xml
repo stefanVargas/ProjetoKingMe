@@ -19,7 +19,9 @@
         <activity android:name=".activities.CreateActivity" />
         <activity android:name=".activities.EnterActivity" />
         <activity android:name=".activities.Onboarding" />
-        <activity android:name=".activities.InGameActivity"></activity>
+        <activity android:name=".activities.InGameActivity" />
+        <activity android:name=".activities.NewGameActivity" />
+        <activity android:name=".activities.GameSearchActivity"></activity>
     </application>
 
 </manifest>

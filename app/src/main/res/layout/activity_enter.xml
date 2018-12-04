@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="57dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="56dp"
         android:text="ENTRAR EM UMA PARTIDA"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
@@ -20,40 +20,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/NomePartText"
+        android:id="@+id/NickText2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="85dp"
         android:layout_marginTop="96dp"
         android:ems="10"
-        android:hint="Nome da Partida"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/PassText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="85dp"
-        android:layout_marginTop="48dp"
-        android:ems="10"
-        android:hint="Senha"
-        android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/NomePartText" />
-
-    <EditText
-        android:id="@+id/NickText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="85dp"
-        android:layout_marginTop="48dp"
-        android:ems="10"
         android:hint="Seu Nick de Jogador"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PassText" />
+        app:layout_constraintTop_toBottomOf="@+id/textENTRAR" />
 
     <Button
         android:id="@+id/EnterButton2"

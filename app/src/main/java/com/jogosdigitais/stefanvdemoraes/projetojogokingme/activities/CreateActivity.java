@@ -9,6 +9,8 @@ import android.widget.EditText;
 
 import com.jogosdigitais.stefanvdemoraes.projetojogokingme.R;
 
+import br.com.senac.pdm.mepresidenta.lobby.CriarJogoActivity;
+
 
 public class CreateActivity extends AppCompatActivity {
 
@@ -34,9 +36,14 @@ public class CreateActivity extends AppCompatActivity {
         criarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(CreateActivity.this, InGameActivity.class);
+                Intent intent = new Intent(CreateActivity.this, CriarJogoActivity.class);
 
-                startActivity(in);
+                intent.putExtra("nomeJogador", nick.getText().toString());
+                intent.putExtra("nomeJogo",nomePartida.getText().toString());
+                intent.putExtra("senhaJogo", senhaPartida.getText().toString());
+                intent.putExtra("criar",true);
+                intent.putExtra("atividadeJogo","com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.InGameActivity");
+                startActivity(intent);
             }
         });
 
