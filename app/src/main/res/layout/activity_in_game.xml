@@ -7,12 +7,12 @@
     tools:context=".activities.InGameActivity">
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/statusTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
         android:text="Jogo executando"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,75 +21,217 @@
 
     <TextView
         android:id="@+id/idJogo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
 
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/statusTxt" />
 
     <TextView
         android:id="@+id/nomeJogo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idJogo" />
 
     <TextView
         android:id="@+id/senhaJogo"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nomeJogo" />
 
     <TextView
         android:id="@+id/idJogador"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/senhaJogo" />
 
     <TextView
         android:id="@+id/nomeJogador"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idJogador" />
 
     <TextView
         android:id="@+id/senhaJogador"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nomeJogador" />
+
+    <RadioGroup
+        android:id="@+id/candidatosGroup"
+        android:layout_width="124dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusTxt">
+
+        <RadioButton
+            android:id="@+id/amoedoRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amoêdo"
+            tools:layout_editor_absoluteX="86dp"
+            tools:layout_editor_absoluteY="78dp" />
+
+        <RadioButton
+            android:id="@+id/bolsoRiD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bolsonaro" />
+
+        <RadioButton
+            android:id="@+id/ciroRID"
+            android:layout_width="112dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ciro Gomes" />
+
+        <RadioButton
+            android:id="@+id/dilmaRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dilma" />
+
+        <RadioButton
+            android:id="@+id/eymaelRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Eymael" />
+
+        <RadioButton
+            android:id="@+id/ferHadRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Fernando Haddad" />
+
+        <RadioButton
+            android:id="@+id/gerAlckRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Geraldo Alckmin" />
+
+        <RadioButton
+            android:id="@+id/itamarRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Itamar" />
+
+        <RadioButton
+            android:id="@+id/lucHuckRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Luciano Huck" />
+
+        <RadioButton
+            android:id="@+id/marinaRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Marina Silva" />
+
+        <RadioButton
+            android:id="@+id/neyRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Neymar" />
+
+        <RadioButton
+            android:id="@+id/oresQuerRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Orestes Quércia" />
+
+        <RadioButton
+            android:id="@+id/pmalufRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Paulo Maluf" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/setorGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/senhaJogador">
+
+        <RadioButton
+            android:id="@+id/senadorRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Senador" />
+
+        <RadioButton
+            android:id="@+id/governadorRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Governador" />
+
+        <RadioButton
+            android:id="@+id/prefeitoRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prefeito"
+            tools:layout_editor_absoluteX="77dp"
+            tools:layout_editor_absoluteY="346dp" />
+
+        <RadioButton
+            android:id="@+id/vereadorRID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Vereador" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/escolherBtn"
+        android:layout_width="119dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="24dp"
+        android:text="Confirmar Escolhas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setorGroup" />
 
 </android.support.constraint.ConstraintLayout>

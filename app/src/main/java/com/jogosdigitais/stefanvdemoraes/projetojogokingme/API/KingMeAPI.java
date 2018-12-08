@@ -54,7 +54,7 @@ public interface KingMeAPI {
 
     //Coloca um personagem no tabuleiro, na fase de Setup de uma rodada.
     @POST("kingme/rest/v1/personagem/{idSetor}/{persona}")
-    Call<List<Setor>> colocaPersonagem(@Path("idSetor") Long idSetor, @Path("persona") String persona);
+    Call<List<Setor>> colocaPersonagem(@Path("idSetor") Long idSetor, @Path("persona") String persona, @Body Jogador jogador);
 
     //Verifica qual é o jogador da "vez"
     @GET ("kingme/rest/v1/jogador/vez/{idJogador}")
