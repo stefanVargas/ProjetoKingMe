@@ -1,5 +1,6 @@
 package com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +18,6 @@ import com.jogosdigitais.stefanvdemoraes.projetojogokingme.models.Jogador;
 import com.jogosdigitais.stefanvdemoraes.projetojogokingme.models.Jogo;
 import com.jogosdigitais.stefanvdemoraes.projetojogokingme.models.Setor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -59,7 +59,7 @@ public class InGameActivity extends AppCompatActivity {
 
     private Button escolher;
 
-    private ArrayList cartas;
+    private List<Setor> listDados;
     private String statusJogo;
     private String statusIdJogador;
 
@@ -68,7 +68,7 @@ public class InGameActivity extends AppCompatActivity {
     private Runnable refresherRunner;
 
     //DE QUANTO EM QAUNTO TEMPO EXECUTARÁ O CODIGO
-    private int taxaAtualizacaoEmSegundos = 5;
+    private int taxaAtualizacaoEmSegundos = 3;
 
     private int contador = 0;
     private TextView statusText;
@@ -81,7 +81,6 @@ public class InGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_in_game);
 
         this.jogador = new Jogador();
-        statusText = (TextView) findViewById(R.id.statusTxt);
         setores = (RadioGroup) findViewById(R.id.setorGroup);
         personagens = (RadioGroup) findViewById(R.id.candidatosGroup);
 
@@ -120,9 +119,6 @@ public class InGameActivity extends AppCompatActivity {
                         if(response.isSuccessful() && dadosJogador != null){
 
                             statusIdJogador = dadosJogador.getId().toString();
-                            statusText.setText("Jogo executando - Status: " + statusJogo);
-
-
 
                         }
 
@@ -130,7 +126,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Jogo> call, Throwable t) {
+                    public void onFailure(Call<Jogador> call, Throwable t) {
 
                         t.printStackTrace();
                         showDialog("Falha ao obter o Resultado!", "ERRO");
@@ -148,10 +144,8 @@ public class InGameActivity extends AppCompatActivity {
 
                         if(response.isSuccessful() && dados != null){
 
-                            statusJogo = dados.getStatus();
+                            statusJogo = dados.getStatusRodado();
                             statusText.setText("Jogo executando - Status: " + statusJogo);
-
-
 
                         }
 
@@ -173,8 +167,11 @@ public class InGameActivity extends AppCompatActivity {
 
                 if (!vez){
                    setores.setActivated(false);
+                   personagens.setActivated(false);
                 } else {
                     setores.setActivated(true);
+                    personagens.setActivated(true);
+
                 }
 
 
@@ -184,6 +181,7 @@ public class InGameActivity extends AppCompatActivity {
         };
 
         //inicializa o atualizador
+        statusText = (TextView) findViewById(R.id.statusTxt);
         startRefresher(0);
 
         this.senador = (RadioButton) findViewById(R.id.senadorRID);
@@ -209,12 +207,12 @@ public class InGameActivity extends AppCompatActivity {
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("jogo", 0); // 0 - for private mode
 
-        String idJogador = pref.getString("idJogador","");
-        String nomeJogador = pref.getString("nomeJogador","");
-        String senhaJogador = pref.getString("senhaJogador","");
+        final String idJogador = pref.getString("idJogador","");
+        final String nomeJogador = pref.getString("nomeJogador","");
+        final String senhaJogador = pref.getString("senhaJogador","");
         String idJogo = pref.getString("idJogo","");
-        String nomeJogo = pref.getString("nomeJogo","");
-        String senhaJogo = pref.getString("senhaJogo","");
+        final String nomeJogo = pref.getString("nomeJogo","");
+        final String senhaJogo = pref.getString("senhaJogo","");
 
         TextView idJogadorTV = findViewById(R.id.idJogador);
         TextView nomeJogadorTV = findViewById(R.id.nomeJogador);
@@ -261,6 +259,22 @@ public class InGameActivity extends AppCompatActivity {
                 checkAndPost(neymar);
                 checkAndPost(oresQuercia);
                 checkAndPost(pMaluf);
+                contador ++;
+
+                if (contador == 3) {
+
+                    Intent intent = new Intent(InGameActivity.this, TabuleiroGameActivity.class);
+
+                    intent.putExtra("nomeJogador", nomeJogador);
+                    intent.putExtra("senhaJogador", senhaJogador);
+                    intent.putExtra("idJogador", idJogador);
+                    intent.putExtra("nomeJogo", nomeJogo);
+                    intent.putExtra("senhaJogo", senhaJogo);
+                    intent.putExtra("idJogo", idJogador);
+                    intent.putExtra("atividadeJogo", "com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.TabuleiroGameActivity");
+                    startActivity(intent);
+                    contador = 0;
+                }
 
 
             }
@@ -276,28 +290,30 @@ public class InGameActivity extends AppCompatActivity {
 
     private void checkAndPost(RadioButton candidato ) {
 
-        Call<List<Setor>> callPersonagem;
+        Call<List<Setor>> callPersonagem = kingApi.colocaPersonagem(Long.valueOf(0),
+                candidato.getText().toString(), jogador);
+        String letra = candidato.getText().toString().substring(0, 1);
 
 
         if (candidato.isChecked()) {
             if (senador.isChecked()) {
 
                 callPersonagem = kingApi.colocaPersonagem(Long.valueOf(4),
-                        candidato.getText().toString(), jogador);
+                        letra, jogador);
 
             } else if (governador.isChecked()) {
 
                 callPersonagem = kingApi.colocaPersonagem(Long.valueOf(3),
-                        candidato.getText().toString(), jogador);
+                        letra, jogador);
 
             } else if (prefeito.isChecked()) {
                 callPersonagem = kingApi.colocaPersonagem(Long.valueOf(2),
-                        candidato.getText().toString(), jogador);
+                        letra, jogador);
 
 
             } else if (vereador.isChecked()) {
                 callPersonagem = kingApi.colocaPersonagem(Long.valueOf(1),
-                        candidato.getText().toString(), jogador);
+                        letra, jogador);
 
 
             } else {
@@ -305,12 +321,33 @@ public class InGameActivity extends AppCompatActivity {
 
             }
 
+            Callback<List<Setor>> cbOrdemSetores = new Callback<List<Setor>>() {
+                @Override
+                public void onResponse(Call<List<Setor>> call, Response<List<Setor>> response) {
+
+                    listDados = response.body();
+
+                }
+
+                @Override
+                public void onFailure(Call<List<Setor>> call, Throwable t) {
+
+                    t.printStackTrace();
+                    showDialog("Falha ao obter o Resultado!", "ERRO");
+
+                }
+            };
+
+            callPersonagem.enqueue(cbOrdemSetores);
+
+
         }
     }
 
     private boolean isMyTurn(String meuID){
 
-        return (statusJogo == "S" && statusIdJogador == meuID);
+        return if (statusIdJogador == meuID);
+
 
     }
 
@@ -324,4 +361,7 @@ public class InGameActivity extends AppCompatActivity {
             refresher.removeCallbacks(refresherRunner);
     }
 
+    public List<Setor> getListDados() {
+        return listDados;
+    }
 }
