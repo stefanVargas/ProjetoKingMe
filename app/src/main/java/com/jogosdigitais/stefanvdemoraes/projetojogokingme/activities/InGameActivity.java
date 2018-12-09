@@ -59,6 +59,7 @@ public class InGameActivity extends AppCompatActivity {
 
     private Button escolher;
 
+    private List<String> cartas;
     private List<Setor> listDados;
     private String statusJogo;
     private String statusIdJogador;
@@ -84,6 +85,9 @@ public class InGameActivity extends AppCompatActivity {
         setores = (RadioGroup) findViewById(R.id.setorGroup);
         personagens = (RadioGroup) findViewById(R.id.candidatosGroup);
 
+        Retrofit retrofit = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
+                .addConverterFactory(GsonConverterFactory.create()) .build();
+
         //inicializa os atualizadores
         refresher = new Handler();
         refresherRunner = new Runnable() {
@@ -100,11 +104,10 @@ public class InGameActivity extends AppCompatActivity {
                 String idJogador = pref.getString("idJogador","");
                 Long idPlayer = Long.valueOf(idJogador);
 
-
-                Retrofit retrofit = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
+                Retrofit retrofit2 = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
                         .addConverterFactory(GsonConverterFactory.create()) .build();
 
-                KingMeAPI api = retrofit.create(KingMeAPI.class);
+                KingMeAPI api = retrofit2.create(KingMeAPI.class);
 
                 Call<Jogo>  callStatus = api.obtemStatusJogo(id);
                 Call<Jogador> verifica = api.verificaJogador(idPlayer);
@@ -214,6 +217,7 @@ public class InGameActivity extends AppCompatActivity {
         final String nomeJogo = pref.getString("nomeJogo","");
         final String senhaJogo = pref.getString("senhaJogo","");
 
+        final TextView favCartas = findViewById(R.id.idFavs);
         TextView idJogadorTV = findViewById(R.id.idJogador);
         TextView nomeJogadorTV = findViewById(R.id.nomeJogador);
         TextView senhaJogadorTV = findViewById(R.id.senhaJogador);
@@ -237,14 +241,43 @@ public class InGameActivity extends AppCompatActivity {
             jogador.setPontuacao(pnt);
         }
 
+        KingMeAPI api = retrofit.create(KingMeAPI.class);
+
+        Call<List<String>> callCartas = api.obterCartas(jogador);
+
+        Callback<List<String>> cbCartas = new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+
+                cartas = response.body();
+
+                for(String cards : cartas){
+
+                    favCartas.setText(favCartas.getText().toString() + " " + cards);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t){
+                t.printStackTrace();
+                showDialog("Falha ao obter o Resultado!", "ERRO");
+
+            }
+        };
+
+        callCartas.enqueue(cbCartas);
+
+
+
         escolher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Retrofit retrofit = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
+                Retrofit retrofit3 = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
                         .addConverterFactory(GsonConverterFactory.create()) .build();
 
-                kingApi = retrofit.create(KingMeAPI.class);
+                kingApi = retrofit3.create(KingMeAPI.class);
 
                 checkAndPost(amoedo);
                 checkAndPost(bolso);
@@ -259,9 +292,8 @@ public class InGameActivity extends AppCompatActivity {
                 checkAndPost(neymar);
                 checkAndPost(oresQuercia);
                 checkAndPost(pMaluf);
-                contador ++;
 
-                if (contador == 3) {
+                if (!statusJogo.equals("S")) {
 
                     Intent intent = new Intent(InGameActivity.this, TabuleiroGameActivity.class);
 
@@ -273,7 +305,6 @@ public class InGameActivity extends AppCompatActivity {
                     intent.putExtra("idJogo", idJogador);
                     intent.putExtra("atividadeJogo", "com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.TabuleiroGameActivity");
                     startActivity(intent);
-                    contador = 0;
                 }
 
 
@@ -346,7 +377,7 @@ public class InGameActivity extends AppCompatActivity {
 
     private boolean isMyTurn(String meuID){
 
-        return if (statusIdJogador == meuID);
+        return (statusIdJogador == meuID);
 
 
     }

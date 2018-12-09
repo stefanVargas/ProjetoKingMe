@@ -46,7 +46,7 @@ public interface KingMeAPI {
 
     //Retorna a carta que contém a lista de personagens favoritos sorteada para este jogador.
     @POST("kingme/rest/v1/personagem")
-    Call<List<String>> obterCartas(@Body Jogo jogo);
+    Call<List<String>> obterCartas(@Body Jogador jogador);
 
     //Exibe uma lista com id e nome de todos os setores.
     @GET ("kingme/rest/v1/setor")
