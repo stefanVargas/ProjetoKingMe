@@ -15,7 +15,6 @@ import retrofit2.http.Path;
 
 public interface KingMeAPI {
 
-
     //Cria uma nova partida
     @POST("kingme/rest/v1/jogo")
     Call<Jogo> criarJogo(@Body Jogo jogo);
@@ -50,11 +49,11 @@ public interface KingMeAPI {
 
     //Exibe uma lista com id e nome de todos os setores.
     @GET ("kingme/rest/v1/setor")
-    Call<List<Setor>> obterJogadores();
+    Call<List<Setor>> obterSetores();
 
     //Coloca um personagem no tabuleiro, na fase de Setup de uma rodada.
-    @POST("kingme/rest/v1/personagem/{idSetor}/{persona}")
-    Call<List<Setor>> colocaPersonagem(@Path("idSetor") Long idSetor, @Path("persona") String persona, @Body Jogador jogador);
+    @POST("kingme/rest/v1/personagem/{idSetor}/{personagens}")
+    Call<List<Setor>> colocaPersonagem(@Path("idSetor") Long idSetor, @Path("personagens") String persona, @Body Jogador jogador);
 
     //Verifica qual é o jogador da "vez"
     @GET ("kingme/rest/v1/jogador/vez/{idJogador}")
@@ -62,7 +61,7 @@ public interface KingMeAPI {
 
     //Promove um personagem para o setor acima durante a fase de promoção de uma rodada
     @PUT("kingme/rest/v1/personagem/{letraPersonagem}")
-    Call<List<Setor>> promovePersonagem (@Path("letraPersonagem") String letra, @Body Jogo jogo);
+    Call<List<Setor>> promovePersonagem (@Path("letraPersonagem") String letra, @Body Jogador jogodor);
 
     //Vota S ou N em um personagem que está na presidencia. Caso todos jogadores votem S, a rodada é finalizada.
     @POST("kingme/rest/v1/voto/{letraVoto}")
@@ -77,17 +76,15 @@ public interface KingMeAPI {
     Call<Jogo> statusJogo(@Path("idJogo") Long idJogo);
 
     //Exibe como foi o voto de cada jogador na última votação já finalizada desta partida.
-    @GET ("kingme/rest/v1/voto/{idJogador}/{senhaJog}")
-    Call<Jogo> exibeVoto(@Path("idJogador") Long idJogador, @Path("senhaJog") String senhaJog);
+    @GET ("kingme/rest/v1/voto/{idJogador}/{senhaJogo}")
+    Call<Jogo> exibeVoto(@Path("idJogador") Long idJogador, @Path("senhaJogo") String senhaJogo);
 
     //Exibe o histórico de jogadas, desde o último movimento do jogador que está fazendo a solicitação.
     @GET ("kingme/rest/v1/jogador/historico/{idJogador}/{senhaJog}")
     Call<List<String>> exibeHistorico(@Path("idJogador") Long idJogador, @Path("senhaJog") String senhaJog);
 
     //Retorna o status do tabuleiro
-    @GET ("kingme/rest/v1/jogo/{idJogador}")
+    @GET ("kingme/rest/v1/jogo/tabuleiro/{idJogador}")
     Call<List<Setor>> statusTabuleiro(@Path("idJogador") Long idJogador);
-
-
 
 }

@@ -18,6 +18,7 @@ import com.jogosdigitais.stefanvdemoraes.projetojogokingme.models.Jogador;
 import com.jogosdigitais.stefanvdemoraes.projetojogokingme.models.Jogo;
 import com.jogosdigitais.stefanvdemoraes.projetojogokingme.models.Setor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,8 +30,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class InGameActivity extends AppCompatActivity {
 
+    Retrofit retrofit2 = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
+            .addConverterFactory(GsonConverterFactory.create()) .build();
+
     Jogador jogador;
     KingMeAPI kingApi;
+    SharedPreferences pref;
 
     //Groups
     private RadioGroup setores;
@@ -57,11 +62,14 @@ public class InGameActivity extends AppCompatActivity {
     private RadioButton oresQuercia;
     private RadioButton pMaluf;
 
+    //Botoes
     private Button escolher;
+    private Button start;
 
     private List<String> cartas;
     private List<Setor> listDados;
-    private String statusJogo;
+    private List<String> persInSetores = new ArrayList<>();
+    private String statusJogo = "X";
     private String statusIdJogador;
 
     //classes do atualizador
@@ -73,8 +81,7 @@ public class InGameActivity extends AppCompatActivity {
 
     private int contador = 0;
     private TextView statusText;
-
-
+    private TextView vezText; boolean vez = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +91,9 @@ public class InGameActivity extends AppCompatActivity {
         this.jogador = new Jogador();
         setores = (RadioGroup) findViewById(R.id.setorGroup);
         personagens = (RadioGroup) findViewById(R.id.candidatosGroup);
+        start = (Button) findViewById(R.id.startbuttonid);
+
+
 
         Retrofit retrofit = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
                 .addConverterFactory(GsonConverterFactory.create()) .build();
@@ -93,98 +103,63 @@ public class InGameActivity extends AppCompatActivity {
         refresherRunner = new Runnable() {
             @Override
             public void run() {
-                final Runnable rThis = this;
+                final Runnable runThis = this;
 
-                SharedPreferences pref = getApplicationContext().getSharedPreferences("jogo", 0); // 0 - for private mode
+                final SharedPreferences pref = getApplicationContext().getSharedPreferences("jogo", 0); // 0 - for private mode
 
                 //AQUI VAI O CÓDIGO QUE SERA EXECUTADO DE TEMPO EM TEMPO
+
                 String idJogo = pref.getString("idJogo","");
-                Long id = Long.valueOf(idJogo);
+                Long id = Long.parseLong(idJogo);
 
                 String idJogador = pref.getString("idJogador","");
-                Long idPlayer = Long.valueOf(idJogador);
+                Long idPlayer = Long.parseLong(idJogador);
 
-                Retrofit retrofit2 = new Retrofit.Builder() .baseUrl("https://mepresidenta.azurewebsites.net/")
-                        .addConverterFactory(GsonConverterFactory.create()) .build();
+
 
                 KingMeAPI api = retrofit2.create(KingMeAPI.class);
 
-                Call<Jogo>  callStatus = api.obtemStatusJogo(id);
-                Call<Jogador> verifica = api.verificaJogador(idPlayer);
+                statusRodada(id);
+                statusTablr(api, idPlayer);
+                verificaStatusJogador(api, id, idPlayer);
 
-                Callback<Jogador> callbackJogador= new Callback<Jogador>() {
-                    @Override
-                    public void onResponse(Call<Jogador> call, Response<Jogador> response) {
+                if(statusJogo.equals("J")){
 
-                        Jogador dadosJogador = response.body();
+                Intent intent = new Intent(InGameActivity.this, TabuleiroGameActivity.class);
 
+                intent.putExtra("nomeJogador", idJogador);
+                intent.putExtra("idJogo", idJogo);
+                intent.putExtra("atividadeJogo", "com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.TabuleiroGameActivity");
+                startActivity(intent);
 
-                        if(response.isSuccessful() && dadosJogador != null){
-
-                            statusIdJogador = dadosJogador.getId().toString();
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<Jogador> call, Throwable t) {
-
-                        t.printStackTrace();
-                        showDialog("Falha ao obter o Resultado!", "ERRO");
-
-                    }
-                };
-                verifica.enqueue(callbackJogador);
-
-                Callback<Jogo> callbackJogo= new Callback<Jogo>() {
-                    @Override
-                    public void onResponse(Call<Jogo> call, Response<Jogo> response) {
-
-                        Jogo dados = response.body();
-
-
-                        if(response.isSuccessful() && dados != null){
-
-                            statusJogo = dados.getStatusRodado();
-                            statusText.setText("Jogo executando - Status: " + statusJogo);
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<Jogo> call, Throwable t) {
-
-                        t.printStackTrace();
-                        showDialog("Falha ao obter o Resultado!", "ERRO");
-
-                    }
-                };
-
-                callStatus.enqueue(callbackJogo);
-
-                boolean vez = isMyTurn(idJogador);
+                }
 
                 if (!vez){
-                   setores.setActivated(false);
-                   personagens.setActivated(false);
+                   setores.setClickable(false);
+                   setores.setVisibility(View.INVISIBLE);
+                   personagens.setClickable(false);
+                   personagens.setVisibility(View.INVISIBLE);
+
                 } else {
-                    setores.setActivated(true);
-                    personagens.setActivated(true);
+                    checaPersonagens(persInSetores);
+                    setores.setClickable(true);
+                    setores.setVisibility(View.VISIBLE);
+                    personagens.setClickable(true);
+                    personagens.setVisibility(View.VISIBLE);
+
 
                 }
 
 
                 //agenda a chamada da proxima atualização
-                refresher.postDelayed(rThis,taxaAtualizacaoEmSegundos * 1000);
+                refresher.postDelayed(runThis,taxaAtualizacaoEmSegundos * 1000);
             }
         };
 
         //inicializa o atualizador
+        pref = getApplicationContext().getSharedPreferences("jogo", 0); // 0 - for private mode
         statusText = (TextView) findViewById(R.id.statusTxt);
+        vezText = (TextView) findViewById(R.id.vezJogadorid);
         startRefresher(0);
 
         this.senador = (RadioButton) findViewById(R.id.senadorRID);
@@ -208,12 +183,11 @@ public class InGameActivity extends AppCompatActivity {
 
         this.escolher = (Button) findViewById(R.id.escolherBtn);
 
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("jogo", 0); // 0 - for private mode
 
         final String idJogador = pref.getString("idJogador","");
         final String nomeJogador = pref.getString("nomeJogador","");
         final String senhaJogador = pref.getString("senhaJogador","");
-        String idJogo = pref.getString("idJogo","");
+        final String idJogo = pref.getString("idJogo","");
         final String nomeJogo = pref.getString("nomeJogo","");
         final String senhaJogo = pref.getString("senhaJogo","");
 
@@ -233,7 +207,7 @@ public class InGameActivity extends AppCompatActivity {
         senhaJogoTV.setText("Senha do Jogo: " + senhaJogo);
 
 
-        jogador.setId(Long.valueOf(idJogador));
+        jogador.setId(Long.parseLong(idJogador));
         jogador.setNome(nomeJogador);
         jogador.setSenha(senhaJogador);
         if (jogador.getPontuacao() == null) {
@@ -241,32 +215,9 @@ public class InGameActivity extends AppCompatActivity {
             jogador.setPontuacao(pnt);
         }
 
-        KingMeAPI api = retrofit.create(KingMeAPI.class);
+        verificaFavCartas(kingApi, favCartas);
 
-        Call<List<String>> callCartas = api.obterCartas(jogador);
 
-        Callback<List<String>> cbCartas = new Callback<List<String>>() {
-            @Override
-            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-
-                cartas = response.body();
-
-                for(String cards : cartas){
-
-                    favCartas.setText(favCartas.getText().toString() + " " + cards);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<String>> call, Throwable t){
-                t.printStackTrace();
-                showDialog("Falha ao obter o Resultado!", "ERRO");
-
-            }
-        };
-
-        callCartas.enqueue(cbCartas);
 
 
 
@@ -279,106 +230,103 @@ public class InGameActivity extends AppCompatActivity {
 
                 kingApi = retrofit3.create(KingMeAPI.class);
 
-                checkAndPost(amoedo);
-                checkAndPost(bolso);
-                checkAndPost(ciraoGomes);
-                checkAndPost(dilma);
-                checkAndPost(eymael);
-                checkAndPost(fHaddad);
-                checkAndPost(gAlckmin);
-                checkAndPost(itamar);
-                checkAndPost(lucHuck);
-                checkAndPost(marina);
-                checkAndPost(neymar);
-                checkAndPost(oresQuercia);
-                checkAndPost(pMaluf);
+                if (statusJogo.equals("S")) {
+                    checaPersonagens(persInSetores);
+                    String[] vec = new String[2];
+                    if (amoedo.isChecked()) vec = checkAndPost(amoedo);
+                    if (bolso.isChecked()) vec = checkAndPost(bolso);
+                    if (ciraoGomes.isChecked()) vec = checkAndPost(ciraoGomes);
+                    if (dilma.isChecked()) vec = checkAndPost(dilma);
+                    if (eymael.isChecked()) vec = checkAndPost(eymael);
+                    if (fHaddad.isChecked()) vec = checkAndPost(fHaddad);
+                    if (gAlckmin.isChecked()) vec = checkAndPost(gAlckmin);
+                    if (itamar.isChecked()) vec = checkAndPost(itamar);
+                    if (lucHuck.isChecked())  vec = checkAndPost(lucHuck);
+                    if (marina.isChecked()) vec = checkAndPost(marina);
+                    if (neymar.isChecked())  vec = checkAndPost(neymar);
+                    if (oresQuercia.isChecked())  vec = checkAndPost(oresQuercia);
+                    if (pMaluf.isChecked()) vec = checkAndPost(pMaluf);
 
-                if (!statusJogo.equals("S")) {
+                    Call<List<Setor>> callPersonagem = kingApi.colocaPersonagem(Long.parseLong(vec[0]),
+                            vec[1], jogador);
 
-                    Intent intent = new Intent(InGameActivity.this, TabuleiroGameActivity.class);
+                    Callback<List<Setor>> cbOrdemSetores = new Callback<List<Setor>>() {
+                        @Override
+                        public void onResponse(Call<List<Setor>> call, Response<List<Setor>> response) {
 
-                    intent.putExtra("nomeJogador", nomeJogador);
-                    intent.putExtra("senhaJogador", senhaJogador);
-                    intent.putExtra("idJogador", idJogador);
-                    intent.putExtra("nomeJogo", nomeJogo);
-                    intent.putExtra("senhaJogo", senhaJogo);
-                    intent.putExtra("idJogo", idJogador);
-                    intent.putExtra("atividadeJogo", "com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.TabuleiroGameActivity");
-                    startActivity(intent);
+                            listDados = response.body();
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Setor>> call, Throwable t) {
+
+                            t.printStackTrace();
+                            showDialog("Falha ao obter o Resultado!", "ERRO");
+
+                        }
+                    };
+                    //checaPersonagens(persInSetores);
+                    callPersonagem.enqueue(cbOrdemSetores);
+                    statusRodada(Long.valueOf(idJogo));
+
                 }
+                else if (!statusJogo.equals("S")) {
 
-
+                    showDialog("Aperte Start para começar a partida!", "ERRO");
+                }
             }
-
         });
 
 
-    }
+    } // ---- END onCreate ----
 
     private void showDialog(String val, String title) { AlertDialog.Builder builder = new
             AlertDialog.Builder(InGameActivity.this); builder.setMessage(val); builder.setTitle(title); builder.setCancelable(false); builder.setPositiveButton("OK", null); AlertDialog dialog = builder.create(); dialog.show();
     }
 
-    private void checkAndPost(RadioButton candidato ) {
+    private String[] checkAndPost(RadioButton candidato) {
 
-        Call<List<Setor>> callPersonagem = kingApi.colocaPersonagem(Long.valueOf(0),
-                candidato.getText().toString(), jogador);
-        String letra = candidato.getText().toString().substring(0, 1);
 
+        String letra = candidato.getText().toString().substring(0, 1).toUpperCase();
+        String[] ret = new  String[2];
+        ret[1] = letra;
 
         if (candidato.isChecked()) {
             if (senador.isChecked()) {
+                ret[0] = "4";
+                System.out.println( jogador.getNome() + " senador -----------p-p-p-p-p-p-p-p-p-  " + letra);
 
-                callPersonagem = kingApi.colocaPersonagem(Long.valueOf(4),
-                        letra, jogador);
 
             } else if (governador.isChecked()) {
+                ret[0] = "3";
+                System.out.println( jogador.getNome() + " governador ----------p-p-p-p-p-p-p-p-p--  " + letra);
 
-                callPersonagem = kingApi.colocaPersonagem(Long.valueOf(3),
-                        letra, jogador);
 
             } else if (prefeito.isChecked()) {
-                callPersonagem = kingApi.colocaPersonagem(Long.valueOf(2),
-                        letra, jogador);
+                ret[0] = "2";
+                System.out.println( jogador.getNome() + " prefeito ---------p-p-p-p-p-p-p-p-p---  " + letra);
 
 
             } else if (vereador.isChecked()) {
-                callPersonagem = kingApi.colocaPersonagem(Long.valueOf(1),
-                        letra, jogador);
+                ret[0] = "1";
+                System.out.println( jogador.getNome() + " vereador --------p-p-p-p-p-p-p-p-p----  " + letra);
+
 
 
             } else {
-                showDialog("Selecione um Setor ", "ERROR");
+                showDialog("Selecione um Setor e um Candidato", "ERROR");
+                return null;
 
             }
-
-            Callback<List<Setor>> cbOrdemSetores = new Callback<List<Setor>>() {
-                @Override
-                public void onResponse(Call<List<Setor>> call, Response<List<Setor>> response) {
-
-                    listDados = response.body();
-
-                }
-
-                @Override
-                public void onFailure(Call<List<Setor>> call, Throwable t) {
-
-                    t.printStackTrace();
-                    showDialog("Falha ao obter o Resultado!", "ERRO");
-
-                }
-            };
-
-            callPersonagem.enqueue(cbOrdemSetores);
-
-
+            return ret;
         }
+        return ret;
     }
 
     private boolean isMyTurn(String meuID){
 
-        return (statusIdJogador == meuID);
-
+        return (statusIdJogador.equals(meuID));
 
     }
 
@@ -395,4 +343,211 @@ public class InGameActivity extends AppCompatActivity {
     public List<Setor> getListDados() {
         return listDados;
     }
+
+    public void checaPersonagens(List<String> lista) {
+
+        for (String letra : lista){
+            if (letra.equals("A")){
+                amoedo.setClickable(false);
+                amoedo.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("B")){
+                bolso.setClickable(false);
+                bolso.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("C")){
+                ciraoGomes.setClickable(false);
+                ciraoGomes.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("D")){
+                dilma.setClickable(false);
+                dilma.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("E")){
+                eymael.setClickable(false);
+                eymael.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("F")){
+                fHaddad.setClickable(false);
+                fHaddad.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("G")){
+                gAlckmin.setClickable(false);
+                gAlckmin.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("I")){
+                itamar.setClickable(false);
+                itamar.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("L")){
+                lucHuck.setClickable(false);
+                lucHuck.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("M")){
+                marina.setClickable(false);
+                marina.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("N")){
+                neymar.setClickable(false);
+                neymar.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("O")){
+                oresQuercia.setClickable(false);
+                oresQuercia.setVisibility(View.INVISIBLE);
+            }
+            else if (letra.equals("P")){
+                pMaluf.setClickable(false);
+                pMaluf.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    public void statusTablr(KingMeAPI api, Long idPlayer){
+
+        Call<List<Setor>> callList = api.statusTabuleiro(idPlayer);
+
+        Callback<List<Setor>> callbackList = new Callback<List<Setor>>() {
+            @Override
+            public void onResponse(Call<List<Setor>> call, Response<List<Setor>> response) {
+
+                listDados = response.body();
+                persInSetores.clear();
+
+                for ( Setor s : listDados){
+                    System.out.println(s.getId() + " " + s.getPersonagens());
+
+                    if (s.getId() >= 1 && s.getId() <= 4) {
+                        if (s.getPersonagens().size() == 4) {
+                            //TODO travar setores
+                            if (s.getId() == 1){
+                                vereador.setEnabled(false);
+                                vereador.setVisibility(View.INVISIBLE);
+                            }
+                            if (s.getId() == 2){
+                                prefeito.setEnabled(false);
+                                prefeito.setVisibility(View.INVISIBLE);
+                            }
+                            if (s.getId() == 3){
+                                governador.setEnabled(false);
+                                governador.setVisibility(View.INVISIBLE);
+                            }
+                            if (s.getId() == 4){
+                                senador.setEnabled(false);
+                                senador.setVisibility(View.INVISIBLE);
+                            }
+
+
+                        }
+
+                        for (int i = 0; i < s.getPersonagens().size(); i++) {
+                            persInSetores.addAll(i, s.getPersonagens());
+                        }
+                    }
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Call<List<Setor>> call, Throwable t) {
+                System.out.println("Print Erro");
+            }
+        };
+
+        callList.enqueue(callbackList);
+    }
+
+    public void verificaStatusJogador(KingMeAPI api, Long idjg, Long idPlayer){
+
+        Call<Jogador> verifica = api.verificaJogador(idPlayer);
+
+        Callback<Jogador> callbackJogador= new Callback<Jogador>() {
+            @Override
+            public void onResponse(Call<Jogador> call, Response<Jogador> response) {
+
+                Jogador dadosJogador = response.body();
+
+
+                if(response.isSuccessful() && dadosJogador != null){
+
+                    statusIdJogador = dadosJogador.getId().toString();
+                    vez = isMyTurn(pref.getString("idJogador",""));
+
+                    vezText.setText(statusIdJogador + " É Sua Vez: " + vez);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Jogador> call, Throwable t) {
+
+                t.printStackTrace();
+                showDialog("Falha ao obter o Resultado!", "ERRO");
+
+            }
+        };
+        verifica.enqueue(callbackJogador);
+    }
+
+    public void statusRodada(Long idjg){
+        KingMeAPI api = retrofit2.create(KingMeAPI.class);
+        Call<Jogo>  callStatus = api.obtemStatusJogo(idjg);
+
+        Callback<Jogo> callbackJogo= new Callback<Jogo>() {
+            @Override
+            public void onResponse(Call<Jogo> call, Response<Jogo> response) {
+
+                Jogo dados = response.body();
+
+
+                if(response.isSuccessful() && dados != null){
+
+                    statusJogo = dados.getStatusRodado();
+                    System.out.println("======= " + dados.getStatusRodado());
+                    statusText.setText("Jogo executando - Status: " + dados.getStatusRodado());
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Jogo> call, Throwable t) {
+
+                t.printStackTrace();
+                showDialog("Falha ao obter o Resultado!", "ERRO");
+
+            }
+        };
+
+        callStatus.enqueue(callbackJogo);
+    }
+
+    public void verificaFavCartas(KingMeAPI api, final TextView favCartas){
+        api = retrofit2.create(KingMeAPI.class);
+
+        Call<List<String>> callCartas = api.obterCartas(jogador);
+
+        Callback<List<String>> cbCartas = new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+
+                cartas = response.body();
+
+                for(String cards : cartas)
+                    favCartas.setText(favCartas.getText().toString() + " " + cards);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t){
+                t.printStackTrace();
+                showDialog("Falha ao obter o Resultado!", "ERRO");
+
+            }
+        };
+
+        callCartas.enqueue(cbCartas);
+    }
+
 }

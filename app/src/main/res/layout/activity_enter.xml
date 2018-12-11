@@ -33,13 +33,11 @@
 
     <Button
         android:id="@+id/EnterButton2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="129dp"
-        android:layout_marginTop="78dp"
-        android:layout_marginEnd="129dp"
+        android:layout_width="130dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="60dp"
         android:text="Entrar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/NickText2" />
 

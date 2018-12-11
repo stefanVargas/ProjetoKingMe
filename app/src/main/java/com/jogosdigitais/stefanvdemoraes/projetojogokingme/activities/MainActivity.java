@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
     private Button createButton;
     private Button enterButton;
     private Button tutorButton;
+    private Button sobreButton;
+
     private ImageView logo;
 
     @Override
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         createButton = (Button) findViewById(R.id.Criarbutton);
         enterButton = (Button) findViewById(R.id.Enterbutton);
         tutorButton = (Button) findViewById(R.id.Tutorbutton);
+        sobreButton = (Button) findViewById(R.id.sobrebutton);
+
         logo = (ImageView) findViewById(R.id.imgLogo);
 
 
@@ -56,7 +60,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        sobreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in4 = new Intent(MainActivity.this, SobreActivity.class);
 
+                startActivity(in4);
+            }
+        });
 
 
 

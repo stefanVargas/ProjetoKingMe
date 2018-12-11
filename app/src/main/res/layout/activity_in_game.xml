@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".activities.InGameActivity">
 
     <TextView
@@ -11,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:text="Jogo executando"
 
@@ -36,6 +37,7 @@
         android:layout_height="wrap_content"
 
         android:layout_marginStart="4dp"
+        android:layout_marginTop="2dp"
         android:text="Favoritos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusTxt" />
@@ -90,13 +92,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nomeJogador" />
 
+    <TextView
+        android:id="@+id/vezJogadorid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/senhaJogador" />
+
+    <Button
+        android:id="@+id/escolherBtn"
+        android:layout_width="119dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="16dp"
+        android:text="Confirmar Escolhas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setorGroup" />
+
     <RadioGroup
         android:id="@+id/candidatosGroup"
-        android:layout_width="124dp"
+        android:layout_width="133dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusTxt">
@@ -200,9 +223,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/senhaJogador">
+        app:layout_constraintTop_toBottomOf="@+id/vezJogadorid">
 
         <RadioButton
             android:id="@+id/senadorRID"
@@ -235,13 +259,15 @@
     </RadioGroup>
 
     <Button
-        android:id="@+id/escolherBtn"
-        android:layout_width="119dp"
-        android:layout_height="68dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="24dp"
-        android:text="Confirmar Escolhas"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setorGroup" />
+        android:id="@+id/startbuttonid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:text="Start"
+        app:layout_constraintEnd_toStartOf="@+id/candidatosGroup"
+        app:layout_constraintStart_toEndOf="@+id/idJogador"
+        app:layout_constraintTop_toBottomOf="@+id/statusTxt" />
 
 </android.support.constraint.ConstraintLayout>
