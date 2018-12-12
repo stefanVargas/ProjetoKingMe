@@ -25,7 +25,8 @@
         <activity android:name=".activities.InGameActivity" />
         <activity android:name=".activities.TabuleiroGameActivity" />
         <activity android:name=".activities.GameSearchActivity" />
-        <activity android:name=".activities.SobreActivity"></activity>
+        <activity android:name=".activities.SobreActivity" />
+        <activity android:name=".activities.EndActivity"></activity>
     </application>
 
 </manifest>

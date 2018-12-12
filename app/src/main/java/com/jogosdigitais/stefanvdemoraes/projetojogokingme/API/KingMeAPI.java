@@ -39,8 +39,8 @@ public interface KingMeAPI {
 
 
     //Retorno o status do jogo e o status da rodada
-    @GET("kingme/rest/v1/jogo/{idJogo}")
-    Call<Jogo> obtemStatusJogo(@Path("idJogo") Long idJogo);
+    @GET("kingme/rest/v1/jogo/{idJogador}")
+    Call<Jogo> obtemStatusJogo(@Path("idJogador") Long idJogador);
 
 
     //Retorna a carta que contém a lista de personagens favoritos sorteada para este jogador.
@@ -61,11 +61,11 @@ public interface KingMeAPI {
 
     //Promove um personagem para o setor acima durante a fase de promoção de uma rodada
     @PUT("kingme/rest/v1/personagem/{letraPersonagem}")
-    Call<List<Setor>> promovePersonagem (@Path("letraPersonagem") String letra, @Body Jogador jogodor);
+    Call<List<Setor>> promovePersonagem (@Path("letraPersonagem") String letraPersonagem, @Body Jogador jogador);
 
     //Vota S ou N em um personagem que está na presidencia. Caso todos jogadores votem S, a rodada é finalizada.
     @POST("kingme/rest/v1/voto/{letraVoto}")
-    Call<List<Setor>> votaKing(@Path("letraVoto") String letraVoto, @Body Jogo jogo);
+    Call<List<Setor>> votaKing(@Path("letraVoto") String letraVoto, @Body Jogador jogador);
 
     //Obtem lista de personagens
     @GET ("kingme/rest/v1/personagem")

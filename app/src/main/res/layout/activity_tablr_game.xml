@@ -8,58 +8,155 @@
 
     <ImageView
         android:id="@+id/tabuleiroID"
-        android:layout_width="364dp"
-        android:layout_height="wrap_content"
+        android:layout_width="330dp"
+        android:layout_height="466dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="16dp"
-        android:alpha="0.6"
-        android:src="@drawable/kingboard"
+        android:adjustViewBounds="false"
+        android:alpha="0.45"
+        android:cropToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.067" />
+        app:srcCompat="@drawable/kingboard" />
 
-    <ImageView
-        android:id="@+id/faixaid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="2dp"
-        android:alpha="0.3"
-        android:src="@drawable/faixa"
+    <RadioGroup
+        android:id="@+id/candidatosGroup2"
+        android:layout_width="209dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/promobuttonid"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        <RadioButton
+            android:id="@+id/ciroRID2"
+            android:layout_width="158dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ciro Gomes" />
+
+        <RadioButton
+            android:id="@+id/amoedoRID2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amoêdo"
+            tools:layout_editor_absoluteX="86dp"
+            tools:layout_editor_absoluteY="78dp" />
+
+        <RadioButton
+            android:id="@+id/bolsoRiD2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bolsonaro" />
+
+        <RadioButton
+            android:id="@+id/dilmaRID2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dilma" />
+
+        <RadioButton
+            android:id="@+id/eymaelRID2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Eymael" />
+
+        <RadioButton
+            android:id="@+id/ferHadRID2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Fernando Haddad" />
+
+        <RadioButton
+            android:id="@+id/gerAlckRID2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Geraldo Alckmin" />
+
+        <RadioButton
+            android:id="@+id/itamarRID2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Itamar" />
+
+        <RadioButton
+            android:id="@+id/lucHuckRID2"
+            android:layout_width="184dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Luciano Huck" />
+
+        <RadioButton
+            android:id="@+id/marinaRID2"
+            android:layout_width="178dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Marina Silva" />
+
+        <RadioButton
+            android:id="@+id/neyRID2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Neymar" />
+
+        <RadioButton
+            android:id="@+id/oresQuerRID2"
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Orestes Quércia" />
+
+        <RadioButton
+            android:id="@+id/pmalufRID2"
+            android:layout_width="179dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Paulo Maluf" />
+
+    </RadioGroup>
 
     <Button
         android:id="@+id/promobuttonid"
-        android:layout_width="wrap_content"
+        android:layout_width="96dp"
         android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Promover"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:text="Promove"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/votarbuttonid"
-        android:layout_width="wrap_content"
+        android:layout_width="83dp"
         android:layout_height="42dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="Votar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promobuttonid" />
+
+    <TextView
+        android:id="@+id/vezid2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="10dp"
+        android:text="Vez:"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

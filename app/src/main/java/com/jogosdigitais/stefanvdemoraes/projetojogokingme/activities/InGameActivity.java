@@ -91,7 +91,7 @@ public class InGameActivity extends AppCompatActivity {
         this.jogador = new Jogador();
         setores = (RadioGroup) findViewById(R.id.setorGroup);
         personagens = (RadioGroup) findViewById(R.id.candidatosGroup);
-        start = (Button) findViewById(R.id.startbuttonid);
+        start = (Button) findViewById(R.id.reloadbuttonid);
 
 
 
@@ -114,23 +114,21 @@ public class InGameActivity extends AppCompatActivity {
 
                 String idJogador = pref.getString("idJogador","");
                 Long idPlayer = Long.parseLong(idJogador);
-
+                statusRodada(idPlayer);
 
 
                 KingMeAPI api = retrofit2.create(KingMeAPI.class);
 
-                statusRodada(id);
-                statusTablr(api, idPlayer);
                 verificaStatusJogador(api, id, idPlayer);
+                statusTablr(api, idPlayer);
+                statusRodada(idPlayer);
 
                 if(statusJogo.equals("J")){
 
-                Intent intent = new Intent(InGameActivity.this, TabuleiroGameActivity.class);
+                    escolher.setText("PROMOVER!");
 
-                intent.putExtra("nomeJogador", idJogador);
-                intent.putExtra("idJogo", idJogo);
-                intent.putExtra("atividadeJogo", "com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.TabuleiroGameActivity");
-                startActivity(intent);
+                    System.out.println("cabo!");
+                    stopRefresher();
 
                 }
 
@@ -146,7 +144,6 @@ public class InGameActivity extends AppCompatActivity {
                     setores.setVisibility(View.VISIBLE);
                     personagens.setClickable(true);
                     personagens.setVisibility(View.VISIBLE);
-
 
                 }
 
@@ -217,10 +214,6 @@ public class InGameActivity extends AppCompatActivity {
 
         verificaFavCartas(kingApi, favCartas);
 
-
-
-
-
         escolher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,13 +261,29 @@ public class InGameActivity extends AppCompatActivity {
                     };
                     //checaPersonagens(persInSetores);
                     callPersonagem.enqueue(cbOrdemSetores);
-                    statusRodada(Long.valueOf(idJogo));
+                    statusRodada(Long.valueOf(idJogador));
 
                 }
-                else if (!statusJogo.equals("S")) {
+                else if (statusJogo.equals("J")) {
 
-                    showDialog("Aperte Start para começar a partida!", "ERRO");
+                    Intent intent = new Intent(InGameActivity.this, TabuleiroGameActivity.class);
+
+                    intent.putExtra("nomeJogador", idJogador);
+                    intent.putExtra("idJogo", idJogo);
+                    intent.putExtra("atividadeJogo", "com.jogosdigitais.stefanvdemoraes.projetojogokingme.activities.TabuleiroGameActivity");
+                    stopRefresher();
+                    startActivity(intent);
+
                 }
+            }
+        });
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                statusRodada(Long.parseLong(idJogador));
+                statusTablr(kingApi, Long.parseLong(idJogador));
+
             }
         });
 
@@ -418,7 +427,7 @@ public class InGameActivity extends AppCompatActivity {
 
                     if (s.getId() >= 1 && s.getId() <= 4) {
                         if (s.getPersonagens().size() == 4) {
-                            //TODO travar setores
+                            // travar setores
                             if (s.getId() == 1){
                                 vereador.setEnabled(false);
                                 vereador.setVisibility(View.INVISIBLE);
@@ -489,9 +498,9 @@ public class InGameActivity extends AppCompatActivity {
         verifica.enqueue(callbackJogador);
     }
 
-    public void statusRodada(Long idjg){
+    public void statusRodada(Long idjgr){
         KingMeAPI api = retrofit2.create(KingMeAPI.class);
-        Call<Jogo>  callStatus = api.obtemStatusJogo(idjg);
+        Call<Jogo>  callStatus = api.obtemStatusJogo(idjgr);
 
         Callback<Jogo> callbackJogo= new Callback<Jogo>() {
             @Override
@@ -505,9 +514,7 @@ public class InGameActivity extends AppCompatActivity {
                     statusJogo = dados.getStatusRodado();
                     System.out.println("======= " + dados.getStatusRodado());
                     statusText.setText("Jogo executando - Status: " + dados.getStatusRodado());
-
                 }
-
 
             }
 
