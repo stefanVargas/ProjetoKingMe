@@ -157,6 +157,7 @@ public class InGameActivity extends AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("jogo", 0); // 0 - for private mode
         statusText = (TextView) findViewById(R.id.statusTxt);
         vezText = (TextView) findViewById(R.id.vezJogadorid);
+
         startRefresher(0);
 
         this.senador = (RadioButton) findViewById(R.id.senadorRID);
@@ -556,5 +557,7 @@ public class InGameActivity extends AppCompatActivity {
 
         callCartas.enqueue(cbCartas);
     }
+
+
 
 }

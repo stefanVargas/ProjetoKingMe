@@ -139,11 +139,12 @@
 
     <Button
         android:id="@+id/votarbuttonid"
-        android:layout_width="83dp"
+        android:layout_width="93dp"
         android:layout_height="42dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:text="Votar"
+        android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/promobuttonid" />
@@ -157,6 +158,16 @@
         android:text="Vez:"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/favsTxt2"
+        android:layout_width="73dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="8dp"
+        android:text="Favoritos:"
+        app:layout_constraintBottom_toTopOf="@+id/vezid2"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

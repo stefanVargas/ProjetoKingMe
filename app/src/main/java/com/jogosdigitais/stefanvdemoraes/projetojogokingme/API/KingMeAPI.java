@@ -71,10 +71,6 @@ public interface KingMeAPI {
     @GET ("kingme/rest/v1/personagem")
     Call<List<String>> obtemPersonagem();
 
-    //Retorno o status do jogo e o status da rodada
-    @GET ("kingme/rest/v1/jogo/{idJogo}")
-    Call<Jogo> statusJogo(@Path("idJogo") Long idJogo);
-
     //Exibe como foi o voto de cada jogador na última votação já finalizada desta partida.
     @GET ("kingme/rest/v1/voto/{idJogador}/{senhaJogo}")
     Call<Jogo> exibeVoto(@Path("idJogador") Long idJogador, @Path("senhaJogo") String senhaJogo);

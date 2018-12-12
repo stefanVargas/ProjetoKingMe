@@ -47,6 +47,7 @@ public class TabuleiroGameActivity extends AppCompatActivity {
     private String statusJogo = "X";
     private String statusRodada = "O";
     private String statusIdJogador;
+    private List<String> cartasFavs;
     private List<Setor> setores;
 
     //Personagens
@@ -66,6 +67,8 @@ public class TabuleiroGameActivity extends AppCompatActivity {
     private RadioButton pMaluf;
 
     private TextView vezTxt;
+    private TextView favs;
+
     private boolean ehVez;
     private boolean changed = false;
 
@@ -92,6 +95,9 @@ public class TabuleiroGameActivity extends AppCompatActivity {
         promover = (Button) findViewById(R.id.promobuttonid);
         votar = (Button) findViewById(R.id.votarbuttonid);
         vezTxt = (TextView) findViewById(R.id.vezid2);
+        favs = (TextView) findViewById(R.id.favsTxt2);
+
+        verificaFavCartas(favs);
 
 
         this.jogador = new Jogador();
@@ -119,23 +125,25 @@ public class TabuleiroGameActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (amoedo.isChecked()) promoverPersonagem(amoedo);
-                if (bolso.isChecked()) promoverPersonagem(bolso);
-                if (ciro.isChecked()) promoverPersonagem(ciro);
-                if (dilma.isChecked()) promoverPersonagem(dilma);
+                else if (bolso.isChecked()) promoverPersonagem(bolso);
+                else if (ciro.isChecked()) promoverPersonagem(ciro);
+                else if (dilma.isChecked()) promoverPersonagem(dilma);
 
-                if (eymael.isChecked()) promoverPersonagem(eymael);
-                if (fHaddad.isChecked()) promoverPersonagem(fHaddad);
-                if (gAlckmin.isChecked()) promoverPersonagem(gAlckmin);
-                if (itamar.isChecked()) promoverPersonagem(itamar);
+                else if (eymael.isChecked()) promoverPersonagem(eymael);
+                else if (fHaddad.isChecked()) promoverPersonagem(fHaddad);
+                else if (gAlckmin.isChecked()) promoverPersonagem(gAlckmin);
+                else if (itamar.isChecked()) promoverPersonagem(itamar);
 
-                if (lucHuck.isChecked()) promoverPersonagem(lucHuck);
-                if (marina.isChecked()) promoverPersonagem(marina);
-                if (neymar.isChecked()) promoverPersonagem(neymar);
-                if (oresQuercia.isChecked()) promoverPersonagem(oresQuercia);
-                if (pMaluf.isChecked()) promoverPersonagem(pMaluf);
+                else if (lucHuck.isChecked()) promoverPersonagem(lucHuck);
+                else if (marina.isChecked()) promoverPersonagem(marina);
+                else if (neymar.isChecked()) promoverPersonagem(neymar);
+                else if (oresQuercia.isChecked()) promoverPersonagem(oresQuercia);
+                else if (pMaluf.isChecked()) promoverPersonagem(pMaluf);
+                else {
+                    Toast.makeText(TabuleiroGameActivity.this, "Ninguém foi selecionado!", Toast.LENGTH_SHORT).show();
+                }
 
-
-                verificaStatusJogador(jogo.getId(),jogador.getId());
+                    verificaStatusJogador(jogo.getId(),jogador.getId());
 
 
 
@@ -197,9 +205,13 @@ public class TabuleiroGameActivity extends AppCompatActivity {
                     }
                 } else if (statusRodada.equals("S")){
                     votar.setVisibility(View.VISIBLE);
+                    votar.setEnabled(true);
                     promover.setVisibility(View.INVISIBLE);
                     votar.setText("Recomeçar");
 
+                } else if (statusRodada.equals("J")){
+                    votar.setVisibility(View.INVISIBLE);
+                    promover.setVisibility(View.VISIBLE);
                 }
 
                 if(!ehVez) {
@@ -309,7 +321,7 @@ public class TabuleiroGameActivity extends AppCompatActivity {
                                     };
                                     callList.enqueue(cbRei);
 
-                                    Toast.makeText(TabuleiroGameActivity.this, presidente + " ELEITO!!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(TabuleiroGameActivity.this, presidente + " Votado!!", Toast.LENGTH_SHORT).show();
 
 
                                 }
@@ -422,7 +434,7 @@ public class TabuleiroGameActivity extends AppCompatActivity {
 
                     statusJogo = dados.getStatus();
                     statusRodada = dados.getStatusRodado();
-                    System.out.println("========> " + dados.getStatusRodado());
+                    System.out.println(statusJogo + " ========> " + dados.getStatusRodado());
 
                 }
 
@@ -459,22 +471,27 @@ public class TabuleiroGameActivity extends AppCompatActivity {
 
                     for (String item : str.getPersonagens()){
 
-                        if(str.getId() == 1 && item.equals(letra)){
-                            candidato.setText(letra + " Cargo: Vereador");
-                        } else if(str.getId() == 2 && item.equals(letra)){
-                            candidato.setText(letra + " Cargo: Prefeito");
-                        } else if(str.getId() == 3 && item.equals(letra)){
-                            candidato.setText(letra + " Cargo: Governador");
-                        } else if(str.getId() == 4 && item.equals(letra)){
-                            candidato.setText(letra + " Cargo: Senador");
-                        } else if(str.getId() == 5 && item.equals(letra)) {
-                            candidato.setText(letra + " Cargo: Ministro");
-                        } else if(str.getId() == 10 && item.equals(letra)) {
-                            candidato.setText(letra + " PRESIDENTE");
-                        } else if(str.getId() == 0 && item.equals(letra)) {
-                            candidato.setText(letra + " Povão");
-                        }
+                       if (item.equals(letra)) {
 
+                           if (str.getId() == 1) {
+                               candidato.setText(letra + " Cargo: Vereador");
+                           } else if (str.getId() == 2) {
+                               candidato.setText(letra + " Cargo: Prefeito");
+                           } else if (str.getId() == 3) {
+                               candidato.setText(letra + " Cargo: Governador");
+                           } else if (str.getId() == 4) {
+                               candidato.setText(letra + " Cargo: Senador");
+                           } else if (str.getId() == 5) {
+                               candidato.setText(letra + " Cargo: Ministro");
+                           } else if (str.getId() == 10) {
+                               candidato.setText(letra + " PRESIDENTE?");
+                           } else if (str.getId() == 0) {
+                               candidato.setText(letra + " é Povão");
+                           } else  {
+                               candidato.setText(letra + " foi Cassado!!");
+                               candidato.setEnabled(false);
+                           }
+                       }
                     }
 
                 }
@@ -552,20 +569,47 @@ public class TabuleiroGameActivity extends AppCompatActivity {
 
     }
 
+    public void verificaFavCartas(final TextView favCartas){
+        KingMeAPI api = retrofit.create(KingMeAPI.class);
+
+        Call<List<String>> callCartas = api.obterCartas(jogador);
+
+        Callback<List<String>> cbCartas = new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+
+                cartasFavs = response.body();
+
+                for(String cards : cartasFavs)
+                    favCartas.setText(favCartas.getText().toString() + " " + cards);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t){
+                t.printStackTrace();
+
+            }
+        };
+
+        callCartas.enqueue(cbCartas);
+    }
+
     public boolean canPromote( String candLetter){
+
+        Setor anterior = new Setor();
 
        for(Setor setor : setores){
 
 
            if(setor.getId() != 5 && setor.getId() != 10 && setor.getPersonagens().size() == 4) {
-               if (setor.getPersonagens().contains(candLetter)){
+               if (anterior.getPersonagens().contains(candLetter)){
                    return false;
                }
 
            }
-           if (setor.getId() == 10 && setor.getPersonagens() != null){
-               return false;
-           }
+
+           anterior = setor;
 
        }
        return true;
@@ -577,6 +621,25 @@ public class TabuleiroGameActivity extends AppCompatActivity {
 
     }
 
+    public Long closePontucao( ) {
+       Long pontos = Long.valueOf(0000) ;
+
+       for(Setor s : setores){
+
+           for(String carta : cartasFavs){
+
+               if(s.getPersonagens().contains(carta)){
+
+                   pontos = pontos + s.getId();
+
+               }
+
+           }
+
+
+       }
+        return pontos;
+    }
 }
 
 
